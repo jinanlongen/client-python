@@ -1,5 +1,11 @@
 # client-python
 
+Add missing create feature for rancher API v2 beta.
+
+Below is the README from https://github.com/rancher/client-python.git
+
+# client-python
+
 A Python client for the Rancher API
 
 ## Installing

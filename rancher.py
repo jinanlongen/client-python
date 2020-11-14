@@ -255,6 +255,18 @@ class Client(object):
                         else:
                             setattr(result, link_name, cb_action)
 
+                if hasattr(result, 'createTypes'):
+                    for link_name, link in result.createTypes.items():
+                        def cb_action(_link_name=link_name, _result=result,
+                                      *args, **kw):
+                            return self.create(_result, link_name, *args, **kw)
+
+                        action_name = "create_" + link_name
+                        if hasattr(result, action_name):
+                            setattr(result, action_name + '_action', cb_action)
+                        else:
+                            setattr(result, action_name, cb_action)
+
             return result
 
         return obj
@@ -430,8 +442,12 @@ class Client(object):
     def reload(self, obj):
         return self.by_id(obj.type, obj.id)
 
-    def create(self, type, *args, **kw):
-        collection_url = self.schema.types[type].links.collection
+    # API, V3 => v2, v1
+    # def create(self, type, *args, **kw):
+    #     collection_url = self.schema.types[type].links.collection
+    #     return self._post(collection_url, data=self._to_dict(*args, **kw))
+    def create(self, obj, type, *args, **kw):
+        collection_url = obj.createTypes[type]
         return self._post(collection_url, data=self._to_dict(*args, **kw))
 
     def delete(self, *args):
